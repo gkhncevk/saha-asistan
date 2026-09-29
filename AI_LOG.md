@@ -6,6 +6,19 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 - **Araç:** Claude Code (Claude Opus 5.5), masaüstü uygulaması. Kod üretimi, terminal komutları ve tarayıcıda test aynı oturumda yapıldı.
 - **Ön hazırlık (süre başlamadan):** Neon hesabı ve boş bir Frankfurt projesi oluşturuldu, git e-postası ayarlandı. Ürün kodu süre başladıktan sonra yazıldı.
 
+## Süre (dürüst döküm)
+
+Commit saatlerine göre (29.09.2026):
+
+| Zaman | İş | Yaklaşık süre |
+|---|---|---|
+| 15:52–17:05 | Çekirdek ürün: form, API, veritabanı, birim + E2E testleri, CI, canlıya alma, README/AI_LOG | ~1 sa 15 dk |
+| 17:05–18:02 | Postman koleksiyonu (API testleri) | ~1 sa |
+| 18:00–23:00 arası | Ara verdim; bu sürede ayrıca Postman'i öğrenip kendi testlerimi yazdım (öğrenme amaçlı, ürüne kod eklemedi) | ürün emeğine sayılmadı |
+| 23:00–23:47 | İki tur arayüz iyileştirmesi, formun yukarı taşınması | ~45 dk |
+
+**Ürüne harcanan aktif emek: yaklaşık 3 saat.** Görev tanımındaki 3–4 saatlik hedefin içinde. Bunun dışında kodu anlamak için Claude'a repo dışında ayrı bir öğrenme rehberi hazırlattım.
+
 ## Görev dağılımı
 
 | Ben (Gökhan) | Claude |
@@ -92,4 +105,12 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 ## Benim kontrollerim (Gökhan)
 
 - **Testleri kendi terminalimde çalıştırdım (29.09.2026, 16:54–16:58):** `npm test` 24/24; `npm run test:e2e` 27 geçti, 3 bilinçli atlama; `npx playwright test --headed --project=masaustu` ile testlerin tarayıcıda formu doldurup gönderişini izledim, 14 geçti.
+- **API'yi Postman ile kendim test ettim.** Postman'i kurup canlı API'ye ilk isteklerimi elle gönderdim:
+  - İlk denemede yöntemi `GET` bıraktığım için **405 Method Not Allowed** aldım. Sunucunun doğru davrandığını, hatanın benim isteğimde olduğunu gördüm; `POST` ile **201** ve `SR-00036` referansı döndü.
+  - Geçersiz alanlarla gönderdim: **422**, dört alanın hatası ayrı ayrı listelendi; cevapta `referans` yoktu.
+  - Bu isteğe dört otomatik test yazdım (`pm.test`): durum 422, `ok` false, `kod` "dogrulama", `referans` alanı yok. Yazarken parantez hataları yaptım ve düzelttim. Bir testte `pm.response.to.not.have.property("")` yazmıştım; Claude bunun **her zaman geçen, hiçbir şeyi kontrol etmeyen** bir test olduğunu gösterdi, düzelttik.
+  - **Negatif kontrol:** Beklenen değeri bilerek `"yanlis"` yaptım; test `AssertionError: expected 'dogrulama' to equal 'yanlis'` ile kırmızıya döndü, diğer üç test yeşil kaldı. Geri aldım.
+  - Postman'in yapay zekası 422 yanıtını görünce "Fix request body validation errors" önerdi; **reddettim**, çünkü 422 bilerek ürettiğimiz beklenen sonuçtu.
+  - Hazır koleksiyonu içe aktardım; içe aktarımda istek sırasının değiştiğini (6. istek 2 ile 3 arasına girdi) fark ettik. 1. ve 2. istek birbirine bağımlı (2, 1'in kaydettiği istek anahtarını kullanıyor), diğerleri bağımsız olduğu için sonuç etkilenmiyor.
+- **Tasarım için kendi projemi referans verdim:** Sayfayı sade bulunca önceki projemi (ynsocial klinik listesi) örnek gösterdim; tipografi ve kart dili oradan uyarlandı (yukarıda).
 - **Karşılaştığım sorun:** İlk denemede E2E başlamadı: "Another next dev server is already running". Ben ayrı bir terminalde `npm run dev` çalıştırmıştım, arka planda Claude'un sunucusu da açıktı; Next.js 16 aynı klasörde ikinci `next dev`'e izin vermiyor. Claude'un sunucusu ayrıca `.next` klasörü üzerinde `build` çalıştırıldığı için bozulmuş, 404 dönüyordu; kapatıldı. README'ye not eklendi.
