@@ -106,6 +106,7 @@ Hız sınırı canlıda da geçerli: aynı ağdan 10 dakikada 5'ten fazla gönde
 - **Talepleri görüntüleyen bir yönetim paneli yok.** Kayıtlar Neon konsolundan ya da SQL ile görülebilir. Kimlik doğrulamalı bir panel kapsam dışı bırakıldı.
 - **Hız sınırı IP bazlı.** Aynı NAT arkasındaki (ör. fabrika ağı) kullanıcılar sınırı paylaşır; 10 dakikada 5 deneme gerçek kullanım için yeterli görüldü. Eşzamanlı isteklerde sayım en fazla birkaç istek sapabilir (atomik sayaç değil).
 - **`istek_denemeleri` tablosu temizlenmiyor.** Üretimde periyodik bir silme işi (ör. 1 günden eski kayıtlar) gerekir.
+- **Zaman aşımından sonra formu düzenleyip tekrar gönderme:** İstek anahtarı yalnızca başarılı kayıttan sonra yenilendiği için, ilk istek sunucuda gerçekte kaydedilmiş ama yanıtı kaybolmuşsa, kullanıcının düzenleyip tekrar gönderdiği içerik yeni kayıt açmaz; eski kaydın referansı döner. Çözüm: alan değiştiğinde anahtarı yenilemek ya da sunucuda aynı anahtar ve farklı içerik için 409 Conflict dönmek.
 - **Referans numaraları ardışık olmayabilir.** Postgres, reddedilen/tekrarlanan INSERT'lerde de sıra numarası tüketir; referans yalnızca benzersizdir.
 - **Tek (açık) tema.** Kontrastı tek yerden garanti etmek için karanlık tema eklenmedi.
 - **Hero'daki telefon ekranı statik bir örnektir**, gerçek yapay zeka çağrısı yapılmaz.
