@@ -22,8 +22,12 @@ test.beforeEach(async ({ page }) => {
 
 test("sayfa hizmeti ve talep formunu doğru sırada sunar", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Arıza kodunu yazın");
+  // Form, "Nasıl çalışır?" anlatıldıktan hemen sonra gelmeli; güven ve SSS formun altında.
   const basliklar = await page.getByRole("heading", { level: 2 }).allTextContents();
-  expect(basliklar.at(-1)).toContain("Keşif görüşmesi talep edin");
+  const nasil = basliklar.findIndex((b) => b.includes("Nasıl çalışır?"));
+  const talep = basliklar.findIndex((b) => b.includes("Keşif görüşmesi talep edin"));
+  expect(nasil).toBeGreaterThan(-1);
+  expect(talep).toBe(nasil + 1);
   await page.getByRole("link", { name: "Keşif görüşmesi talep et" }).click();
   await expect(page).toHaveURL(/#talep$/);
 });

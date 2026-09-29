@@ -2,9 +2,10 @@ import Ikon, { type IkonAdi } from "@/components/Ikon";
 import TalepFormu from "@/components/TalepFormu";
 
 // İçerik sırası: ne yapıyoruz → hangi sorunu çözüyoruz → bugün/yarın farkı →
-// kimin için → nasıl çalışıyor → neden güvenilir → sık sorulanlar → talep.
-// Ziyaretçi forma geldiğinde neyi talep ettiğini bilsin diye form en sonda,
-// ama her yerden tek tıkla ulaşılabilir.
+// kimin için → nasıl çalışıyor → talep → neden güvenilir → sık sorulanlar.
+// Form, ziyaretçi "ne, neden, nasıl" sorularının cevabını aldıktan hemen sonra
+// geliyor; güven ve SSS bölümleri kararsız kalanlar için formun altında.
+// Başlıktaki "Talep oluştur" her yerden forma götürür.
 
 const sorunlar: { ikon: IkonAdi; baslik: string; metin: string }[] = [
   {
@@ -122,22 +123,19 @@ function Bolum({
   id,
   baslikId,
   baslik,
-  ust,
   children,
   className = "",
 }: {
   id?: string;
   baslikId: string;
   baslik: string;
-  ust?: string;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
     <section id={id} aria-labelledby={baslikId} className={`scroll-mt-20 ${className}`}>
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
-        {ust && <p className="font-semibold uppercase tracking-wide text-amber-800">{ust}</p>}
-        <h2 id={baslikId} className="mt-2 max-w-3xl text-3xl font-medium text-slate-950 sm:text-4xl">
+        <h2 id={baslikId} className="max-w-3xl text-3xl font-medium text-slate-950 sm:text-4xl">
           {baslik}
         </h2>
         {children}
@@ -184,27 +182,14 @@ export default function Sayfa() {
       <main id="icerik" className="flex-1">
         {/* 1. Değer önerisi */}
         <section aria-labelledby="hero-baslik" className="relative overflow-hidden bg-slate-950 text-white">
-          {/* Süs: ince ızgara deseni ve amber ışıma */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.05)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-amber-500/20 blur-3xl"
-          />
           <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 md:grid-cols-[1.1fr_1fr] md:py-24">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-sm font-semibold text-amber-200">
-                <Ikon ad="fabrika" className="h-4 w-4" />
-                Üretim tesisleri için yapay zeka destekli bakım asistanı
-              </p>
-              <h1 id="hero-baslik" className="mt-6 text-4xl font-medium leading-[1.1] tracking-tight sm:text-5xl">
+              <h1 id="hero-baslik" className="text-4xl font-medium leading-[1.1] tracking-tight sm:text-5xl">
                 Arıza kodunu yazın, çözüm adımlarını <em className="italic text-amber-300">kaynağıyla birlikte</em> görün.
               </h1>
               <p className="mt-6 text-lg text-slate-300">
                 SahaRehber, tesisinizin makine kılavuzlarını ve geçmiş arıza kayıtlarını sahadaki teknisyenin telefondan
-                sorgulayabildiği bir asistana dönüştürür. Her cevap, alındığı dokümanın sayfasını gösterir.
+                sorgulayabildiği, yapay zeka destekli bir asistana dönüştürür. Her cevap, alındığı dokümanın sayfasını gösterir.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
@@ -306,8 +291,13 @@ export default function Sayfa() {
           </div>
         </section>
 
+        <div
+          aria-hidden="true"
+          className="h-2 bg-[repeating-linear-gradient(-45deg,#fbbf24_0_14px,#0f172a_14px_28px)]"
+        />
+
         {/* 2. Sorun */}
-        <Bolum baslikId="sorun-baslik" ust="Sorun" baslik="Makine durduğunda zaman kılavuzda kayboluyor">
+        <Bolum baslikId="sorun-baslik" baslik="Makine durduğunda zaman kılavuzda kayboluyor">
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {sorunlar.map((s) => (
               <li key={s.baslik} className="rounded-xl border border-l-4 border-slate-200 border-l-amber-500 bg-white p-6 shadow-sm transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-md">
@@ -322,7 +312,7 @@ export default function Sayfa() {
         </Bolum>
 
         {/* 3. Bugün / SahaRehber ile */}
-        <Bolum baslikId="fark-baslik" ust="Fark" baslik="Aynı arıza, iki farklı sabah" className="bg-white">
+        <Bolum baslikId="fark-baslik" baslik="Aynı arıza, iki farklı sabah" className="bg-white">
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <div className="rounded-xl border border-slate-300 bg-slate-50 p-6">
               <h3 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
@@ -356,7 +346,7 @@ export default function Sayfa() {
         </Bolum>
 
         {/* 4. Kimin için */}
-        <Bolum baslikId="kim-baslik" ust="Kimin için" baslik="Kimin işini kolaylaştırır?">
+        <Bolum baslikId="kim-baslik" baslik="Kimin işini kolaylaştırır?">
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {kimlerIcin.map((k) => (
               <li key={k.rol} className="flex gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -373,7 +363,7 @@ export default function Sayfa() {
         </Bolum>
 
         {/* 5. Nasıl çalışır */}
-        <Bolum id="nasil" baslikId="nasil-baslik" ust="Süreç" baslik="Nasıl çalışır?" className="bg-white">
+        <Bolum id="nasil" baslikId="nasil-baslik" baslik="Nasıl çalışır?" className="bg-white">
           <ol className="mt-10 grid gap-6 md:grid-cols-3">
             {adimlar.map((a, i) => (
               <li key={a.baslik} className="relative rounded-xl border border-slate-200 bg-slate-50 p-6 transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-md">
@@ -393,51 +383,11 @@ export default function Sayfa() {
           </ol>
         </Bolum>
 
-        {/* 6. Güven */}
-        <section aria-labelledby="ilke-baslik" className="bg-slate-900 text-white">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
-            <p className="font-semibold uppercase tracking-wide text-amber-300">İlkeler</p>
-            <h2 id="ilke-baslik" className="mt-2 text-3xl font-medium sm:text-4xl">
-              Sahada güvenilebilecek bir asistan
-            </h2>
-            <ul className="mt-10 grid gap-8 md:grid-cols-3">
-              {ilkeler.map((ilke) => (
-                <li key={ilke.baslik}>
-                  <Ikon ad={ilke.ikon} className="h-8 w-8 text-amber-300" />
-                  <h3 className="mt-3 text-lg font-semibold text-amber-300">{ilke.baslik}</h3>
-                  <p className="mt-2 text-slate-200">{ilke.metin}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* 7. Sık sorulanlar: yerel <details>, klavye ve ekran okuyucu desteği tarayıcıdan gelir */}
-        <Bolum id="sss" baslikId="sss-baslik" ust="Sık sorulanlar" baslik="Aklınıza takılabilecekler">
-          <div className="mt-10 max-w-3xl divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-            {sss.map((s) => (
-              <details key={s.soru} className="group p-5">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-semibold text-slate-950 [&::-webkit-details-marker]:hidden">
-                  {s.soru}
-                  <span
-                    aria-hidden="true"
-                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-100 text-xl leading-none text-slate-700 transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 text-slate-700">{s.cevap}</p>
-              </details>
-            ))}
-          </div>
-        </Bolum>
-
-        {/* 8. Talep */}
-        <section id="talep" aria-labelledby="talep-baslik" className="scroll-mt-20 bg-white">
+        {/* 6. Talep */}
+        <section id="talep" aria-labelledby="talep-baslik" className="scroll-mt-20 border-y border-slate-200 bg-slate-100">
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-5 md:py-20">
             <div className="md:col-span-2">
-              <p className="font-semibold uppercase tracking-wide text-amber-800">Talep</p>
-              <h2 id="talep-baslik" className="mt-2 text-3xl font-medium text-slate-950 sm:text-4xl">
+              <h2 id="talep-baslik" className="text-3xl font-medium text-slate-950 sm:text-4xl">
                 Keşif görüşmesi talep edin
               </h2>
               <p className="mt-4 text-slate-700">
@@ -470,11 +420,49 @@ export default function Sayfa() {
               </ol>
               <p className="mt-6 text-sm text-slate-700">Görüşme ücretsizdir ve bağlayıcı değildir. Tüm alanlar zorunludur.</p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-8 md:col-span-3">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8 md:col-span-3">
               <TalepFormu />
             </div>
           </div>
         </section>
+        {/* 7. Güven */}
+        <section aria-labelledby="ilke-baslik" className="bg-slate-900 text-white">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
+            <h2 id="ilke-baslik" className="text-3xl font-medium sm:text-4xl">
+              Sahada güvenilebilecek bir asistan
+            </h2>
+            <ul className="mt-10 grid gap-8 md:grid-cols-3">
+              {ilkeler.map((ilke) => (
+                <li key={ilke.baslik}>
+                  <Ikon ad={ilke.ikon} className="h-8 w-8 text-amber-300" />
+                  <h3 className="mt-3 text-lg font-semibold text-amber-300">{ilke.baslik}</h3>
+                  <p className="mt-2 text-slate-200">{ilke.metin}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* 8. Sık sorulanlar: yerel <details>, klavye ve ekran okuyucu desteği tarayıcıdan gelir */}
+        <Bolum id="sss" baslikId="sss-baslik" baslik="Aklınıza takılabilecekler">
+          <div className="mt-10 max-w-3xl divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+            {sss.map((s) => (
+              <details key={s.soru} className="group p-5">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-semibold text-slate-950 [&::-webkit-details-marker]:hidden">
+                  {s.soru}
+                  <span
+                    aria-hidden="true"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-100 text-xl leading-none text-slate-700 transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-slate-700">{s.cevap}</p>
+              </details>
+            ))}
+          </div>
+        </Bolum>
+
       </main>
 
       <footer className="bg-slate-900 text-slate-300">
