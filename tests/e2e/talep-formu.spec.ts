@@ -44,6 +44,16 @@ test("ilk Tab 'Talep formuna geç' bağlantısını gösterir ve forma götürü
   await expect(page).toHaveURL(/#talep$/);
 });
 
+test("'hareketi azalt' tercihinde örnek ekran animasyonsuz, hemen görünür", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const kaynak = page.getByText("HX-400 Bakım Kılavuzu · s. 212");
+  // Animasyon gecikmesi 1.2 sn; tercih dikkate alınıyorsa 200 ms içinde tam opak olmalı.
+  await page.waitForTimeout(200);
+  const opaklik = await kaynak.evaluate((e) => getComputedStyle(e.closest(".saha-belir")!).opacity);
+  expect(opaklik).toBe("1");
+});
+
 test("mobilde görünen tüm dokunma hedefleri en az 44 px yüksekliğinde", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Dokunma hedefi ölçütü mobil için");
   const kucukler = await page.evaluate(() =>

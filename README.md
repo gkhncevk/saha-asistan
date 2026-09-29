@@ -65,6 +65,8 @@ Tarayıcı
 - Görünür odak halkası (`:focus-visible`, 3 px), metin kontrastı WCAG AA (slate-700+ beyaz üzerinde), `prefers-reduced-motion` desteği.
 - Mobil öncelikli: kullanıcı sahada telefonla. 375 px'te yatay taşma yok (E2E testi), dokunma hedefleri ≥ 44 px, e-posta alanında `inputMode="email"`.
 - "Talep formuna geç" atlama bağlantısı, `lang="tr"`.
+- Hero'daki örnek ekran animasyonu `prefers-reduced-motion` tercihinde kapanır (testli). SSS bölümü yerel `<details>` ile: klavye ve ekran okuyucu desteği tarayıcıdan gelir.
+- İkonlar yalnızca süs amaçlı (`aria-hidden`), anlamı her zaman yanındaki metin taşır.
 
 ## Kurulum
 
@@ -83,14 +85,14 @@ npm run dev                     # http://localhost:3000
 
 ```bash
 npm test                        # 24 birim/API testi (veritabanı gerekmez)
-npm run test:e2e                # 23 uçtan uca test, masaüstü + mobil (yerel sunucuyu kendisi başlatır)
+npm run test:e2e                # 15 senaryo × masaüstü/mobil = 30 test (27 çalışır, 3 cihaza özel atlanır)
 BASE_URL=https://saha-asistani.vercel.app npm run test:e2e   # aynı testler canlıya karşı
 ```
 
 | Katman | Kapsanan senaryolar |
 |---|---|
 | Birim / API (`tests/unit`) | Başarılı kayıt 201 · DB hatasında 503 ve başarı yok · hız sınırı kaydı başarısızsa başarı yok · 422 alan hataları · eksik alanlı istek · yalnızca boşluk · idempotent tekrar · 429 + Retry-After · IP'ler birbirini etkilemez · honeypot · bozuk JSON 400 · yanlış içerik türü 415 · büyük gövde 413 · `no-store` · şema sınır değerleri |
-| Uçtan uca (`tests/e2e`) | İçerik sırası · yatay taşma yok · boş gönderimde hata özeti + odak + istek atılmaz · hata düzeltilince kaybolur · **gerçek DB kaydı** ve referans · klavye ile gönderim · 503'te bilgiler korunur · `ok:true` ama referans yoksa başarı yok · ağ kopması · çift tıklama tek istek, tekrar denemede aynı anahtar · 429 mesajı · sunucu 422 hatasının forma yansıması |
+| Uçtan uca (`tests/e2e`) | İçerik sırası · yatay taşma yok · mobilde dokunma hedefleri ≥ 44 px · ilk Tab'da atlama bağlantısı · "hareketi azalt" tercihinde animasyonsuz · boş gönderimde hata özeti + odak + istek atılmaz · hata düzeltilince kaybolur · **gerçek DB kaydı** ve referans · klavye ile gönderim · 503'te bilgiler korunur · `ok:true` ama referans yoksa başarı yok · ağ kopması · çift tıklama tek istek, tekrar denemede aynı anahtar · 429 mesajı · sunucu 422 hatasının forma yansıması |
 
 CI (GitHub Actions): lint, tip kontrolü, birim testleri, build ve Playwright (CI'da DB olmadığı için yalnızca "gerçek kayıt" testi atlanır).
 
