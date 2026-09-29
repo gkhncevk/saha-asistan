@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm test
+      - run: npm run build
+      # CI'da veritabanı yok: gerçek kayıt testi atlanır, diğer senaryolar
+      # (hata durumları, erişilebilirlik, mobil) ağ taklidiyle çalışır.
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --grep-invert "gerçek kayıt"

@@ -72,26 +72,26 @@ export default function Sayfa() {
     <>
       <a
         href="#talep"
-        className="sr-only z-50 rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        className="sr-only z-50 rounded-lg bg-slate-900 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:px-4 focus:py-3"
       >
         Talep formuna geç
       </a>
 
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <a href="#" className="flex items-center gap-2 text-lg font-bold text-slate-900">
+          <a href="#" className="flex min-h-11 items-center gap-2 text-lg font-bold text-slate-900">
             <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-md bg-amber-400 text-slate-950">
               SR
             </span>
             SahaRehber
           </a>
           <nav aria-label="Ana menü" className="flex items-center gap-1 sm:gap-4">
-            <a href="#nasil" className="hidden px-2 py-2 text-slate-800 hover:underline sm:inline">
+            <a href="#nasil" className="hidden min-h-11 items-center px-2 text-slate-800 hover:underline sm:inline-flex">
               Nasıl çalışır?
             </a>
             <a
               href="#talep"
-              className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-700"
+              className="inline-flex min-h-11 items-center rounded-lg bg-slate-900 px-4 font-semibold text-white hover:bg-slate-700"
             >
               Talep oluştur
             </a>

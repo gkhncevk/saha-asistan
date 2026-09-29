@@ -33,6 +33,29 @@ test("mobilde ve masaüstünde yatay kaydırma yok", async ({ page }) => {
   expect(tasma).toBe(false);
 });
 
+test("ilk Tab 'Talep formuna geç' bağlantısını gösterir ve forma götürür", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Klavye akışı masaüstünde sınanıyor");
+  await page.keyboard.press("Tab");
+  const atla = page.getByRole("link", { name: "Talep formuna geç" });
+  await expect(atla).toBeFocused();
+  const kutu = await atla.boundingBox();
+  expect(kutu!.height).toBeGreaterThanOrEqual(44);
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#talep$/);
+});
+
+test("mobilde görünen tüm dokunma hedefleri en az 44 px yüksekliğinde", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Dokunma hedefi ölçütü mobil için");
+  const kucukler = await page.evaluate(() =>
+    [...document.querySelectorAll("a, button, input, select, textarea")]
+      .filter((e) => !e.closest("[aria-hidden=true]"))
+      .map((e) => ({ ad: (e.textContent || e.getAttribute("name") || "").trim().slice(0, 30), r: e.getBoundingClientRect() }))
+      .filter(({ r }) => r.width > 1 && r.height > 1 && r.height < 44)
+      .map(({ ad, r }) => `${ad}: ${Math.round(r.height)}px`),
+  );
+  expect(kucukler).toEqual([]);
+});
+
 test("boş gönderimde hata özeti gösterir, odağı özete taşır, istek atmaz", async ({ page }) => {
   let istekSayisi = 0;
   page.on("request", (r) => r.url().includes("/api/talepler") && istekSayisi++);
