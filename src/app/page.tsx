@@ -137,7 +137,7 @@ function Bolum({
     <section id={id} aria-labelledby={baslikId} className={`scroll-mt-20 ${className}`}>
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
         {ust && <p className="font-semibold uppercase tracking-wide text-amber-800">{ust}</p>}
-        <h2 id={baslikId} className="mt-2 max-w-3xl text-3xl font-bold text-slate-950 sm:text-4xl">
+        <h2 id={baslikId} className="mt-2 max-w-3xl text-3xl font-medium text-slate-950 sm:text-4xl">
           {baslik}
         </h2>
         {children}
@@ -183,85 +183,124 @@ export default function Sayfa() {
 
       <main id="icerik" className="flex-1">
         {/* 1. Değer önerisi */}
-        <section aria-labelledby="hero-baslik" className="relative overflow-hidden bg-white">
+        <section aria-labelledby="hero-baslik" className="relative overflow-hidden bg-slate-950 text-white">
+          {/* Süs: ince ızgara deseni ve amber ışıma */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,#fef3c7_0,transparent_45%),radial-gradient(circle_at_10%_90%,#e2e8f0_0,transparent_40%)]"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.05)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
           />
-          <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-12 sm:px-6 md:grid-cols-2 md:py-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-amber-500/20 blur-3xl"
+          />
+          <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 sm:px-6 md:grid-cols-[1.1fr_1fr] md:py-24">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-900">
+              <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-sm font-semibold text-amber-200">
                 <Ikon ad="fabrika" className="h-4 w-4" />
                 Üretim tesisleri için yapay zeka destekli bakım asistanı
               </p>
-              <h1 id="hero-baslik" className="mt-5 text-4xl font-bold leading-tight text-slate-950 sm:text-5xl">
-                Arıza kodunu yazın, çözüm adımlarını <span className="text-amber-700">kaynağıyla birlikte</span> görün.
+              <h1 id="hero-baslik" className="mt-6 text-4xl font-medium leading-[1.1] tracking-tight sm:text-5xl">
+                Arıza kodunu yazın, çözüm adımlarını <em className="italic text-amber-300">kaynağıyla birlikte</em> görün.
               </h1>
-              <p className="mt-5 text-lg text-slate-700">
+              <p className="mt-6 text-lg text-slate-300">
                 SahaRehber, tesisinizin makine kılavuzlarını ve geçmiş arıza kayıtlarını sahadaki teknisyenin telefondan
                 sorgulayabildiği bir asistana dönüştürür. Her cevap, alındığı dokümanın sayfasını gösterir.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="#talep"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-slate-900 px-6 py-3 text-lg font-semibold text-white hover:bg-slate-700"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-400 px-6 py-3 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-300"
                 >
                   Keşif görüşmesi talep et
                 </a>
                 <a
                   href="#nasil"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg border-2 border-slate-900 bg-white px-6 py-3 text-lg font-semibold text-slate-900 hover:bg-slate-100"
+                  className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/30 px-6 py-3 text-lg font-semibold text-white hover:bg-white/10"
                 >
                   Nasıl çalışır?
                 </a>
               </div>
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-700">
-                {["Kaynak gösteren cevaplar", "Mevcut CMMS ile çalışır", "Sahada, telefondan"].map((m) => (
-                  <li key={m} className="flex items-center gap-1.5">
-                    <Ikon ad="tik" className="h-4 w-4 text-emerald-700" />
-                    {m}
+              <ul className="mt-10 grid grid-cols-2 gap-3">
+                {(
+                  [
+                    { ikon: "kaynak", baslik: "Kaynak gösterir", alt: "Kılavuz sayfası ve arıza kaydı" },
+                    { ikon: "kalkan", baslik: "Güvenlik önce", alt: "LOTO uyarısı adımlardan önce" },
+                    { ikon: "gecmis", baslik: "Geçmişten öğrenir", alt: "Önceki arıza çözümleri" },
+                    { ikon: "telefon", baslik: "Sahada çalışır", alt: "Telefondan, eldivenle bile" },
+                  ] as const
+                ).map((k) => (
+                  <li key={k.baslik} className="flex items-start gap-3 rounded-xl border border-white/15 bg-white/[0.06] p-3">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-amber-400/15 text-amber-300">
+                      <Ikon ad={k.ikon} className="h-5 w-5" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-semibold text-white">{k.baslik}</span>
+                      <span className="block text-xs text-slate-400">{k.alt}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Ürün fikrini anlatan statik örnek ekran (gerçek bir yapay zeka çağrısı yapılmaz). */}
-            <figure className="mx-auto w-full max-w-sm">
-              <div className="rounded-[2.5rem] border-[10px] border-slate-900 bg-slate-100 shadow-2xl">
-                <div className="flex items-center justify-between rounded-t-[1.9rem] bg-slate-900 px-5 pb-2 pt-1 text-xs text-slate-300">
-                  <span>09:41</span>
-                  <span className="h-1.5 w-16 rounded-full bg-slate-700" aria-hidden="true" />
-                  <span>Hat 2 · Pres</span>
+            {/* Ürün fikrini anlatan statik örnek ekranlar (gerçek bir yapay zeka çağrısı yapılmaz). */}
+            <figure className="relative mx-auto w-full max-w-md md:h-[31rem]">
+              {/* Bakım şefinin gördüğü panel: "bilmiyorsa söyler" ilkesini de gösterir. */}
+              <div className="hidden rounded-2xl border border-white/10 bg-slate-900/90 p-4 text-sm shadow-2xl backdrop-blur md:absolute md:left-0 md:top-0 md:block md:w-64 lg:w-72">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <p className="font-semibold">Bakım paneli · Tesis A</p>
+                  <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Canlı</span>
                 </div>
-                <div className="space-y-3 p-4">
-                  <p className="saha-belir ml-8 rounded-2xl rounded-br-sm bg-slate-900 px-4 py-3 text-sm text-white">
+                <ul className="mt-3 space-y-2">
+                  {[
+                    { makine: "HX-400 Pres", ariza: "E-217 · hidrolik basınç", durum: "Kaynaklı çözüm", renk: "text-emerald-300 bg-emerald-400/15" },
+                    { makine: "CNC-12", ariza: "Mil ısınması", durum: "Uzmana iletildi", renk: "text-amber-200 bg-amber-400/15" },
+                    { makine: "Kompresör K-3", ariza: "Periyodik yağ değişimi", durum: "Tamamlandı", renk: "text-slate-300 bg-white/10" },
+                  ].map((s) => (
+                    <li key={s.makine} className="rounded-lg bg-white/5 px-3 py-2">
+                      <p className="font-medium text-white">{s.makine}</p>
+                      <p className="text-xs text-slate-400">{s.ariza}</p>
+                      <span className={`mt-1.5 inline-block rounded-md px-2 py-0.5 text-xs font-medium ${s.renk}`}>{s.durum}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Teknisyenin telefonu */}
+              <div className="mx-auto w-full max-w-[18rem] rounded-[2.5rem] border-[10px] border-slate-800 bg-slate-100 text-slate-900 shadow-2xl shadow-black/60 md:absolute md:right-0 md:top-24 md:w-64 lg:w-72">
+                <div className="flex items-center justify-between rounded-t-[1.9rem] bg-slate-800 px-5 pb-2 pt-1 text-xs text-slate-300">
+                  <span>09:41</span>
+                  <span className="h-1.5 w-14 rounded-full bg-slate-700" aria-hidden="true" />
+                  <span>Hat 2</span>
+                </div>
+                <div className="space-y-3 p-3">
+                  <p className="saha-belir ml-6 rounded-2xl rounded-br-sm bg-slate-900 px-3 py-2 text-xs text-white">
                     HX-400 presinde E-217 hatası var, hidrolik basınç düşük.
                   </p>
-                  <div className="saha-belir saha-gecikme-1 rounded-2xl rounded-bl-sm border border-slate-300 bg-white p-4 text-sm text-slate-800 shadow-sm">
-                    <p className="flex items-start gap-2 rounded-lg bg-red-50 p-2 font-semibold text-red-800">
-                      <Ikon ad="uyari" className="mt-0.5 h-4 w-4 shrink-0" />
+                  <div className="saha-belir saha-gecikme-1 rounded-2xl rounded-bl-sm border border-slate-300 bg-white p-3 text-xs text-slate-800 shadow-sm">
+                    <p className="flex items-start gap-1.5 rounded-md bg-red-50 p-1.5 font-semibold text-red-800">
+                      <Ikon ad="uyari" className="mt-px h-3.5 w-3.5 shrink-0" />
                       Önce makineyi durdurup kilitleyin (LOTO).
                     </p>
-                    <ol className="mt-3 list-decimal space-y-1.5 pl-5">
-                      <li>Hidrolik yağ seviyesini gösterge camından kontrol edin.</li>
-                      <li>Pompa emiş filtresinde tıkanma olup olmadığına bakın.</li>
-                      <li>Basınç ayar valfini kılavuzdaki değere göre kontrol edin.</li>
+                    <ol className="mt-2 list-decimal space-y-1 pl-4">
+                      <li>Hidrolik yağ seviyesini kontrol edin.</li>
+                      <li>Pompa emiş filtresine bakın.</li>
+                      <li>Basınç ayar valfini kılavuz değerine göre ayarlayın.</li>
                     </ol>
-                    <div className="saha-belir saha-gecikme-2 mt-3 flex flex-wrap gap-2 border-t border-slate-200 pt-3">
-                      <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-800">
-                        <Ikon ad="kaynak" className="h-3.5 w-3.5" />
+                    <div className="saha-belir saha-gecikme-2 mt-2 flex flex-wrap gap-1.5 border-t border-slate-200 pt-2">
+                      <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-800">
+                        <Ikon ad="kaynak" className="h-3 w-3" />
                         HX-400 Bakım Kılavuzu · s. 212
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-800">
-                        <Ikon ad="gecmis" className="h-3.5 w-3.5" />
+                      <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-800">
+                        <Ikon ad="gecmis" className="h-3 w-3" />
                         Arıza kaydı #1843
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <figcaption className="mt-4 text-center text-sm text-slate-700">
-                Örnek ekran: kurgusal makine ve veriler.
+              <figcaption className="mt-4 text-sm text-slate-400 md:absolute md:bottom-0 md:left-0 md:mt-0 md:w-56 lg:w-64">
+                Örnek ekranlar: kurgusal makine ve veriler.
               </figcaption>
             </figure>
           </div>
@@ -271,7 +310,7 @@ export default function Sayfa() {
         <Bolum baslikId="sorun-baslik" ust="Sorun" baslik="Makine durduğunda zaman kılavuzda kayboluyor">
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {sorunlar.map((s) => (
-              <li key={s.baslik} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <li key={s.baslik} className="rounded-xl border border-l-4 border-slate-200 border-l-amber-500 bg-white p-6 shadow-sm transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-md">
                 <span className="grid h-12 w-12 place-items-center rounded-lg bg-slate-100 text-slate-800">
                   <Ikon ad={s.ikon} />
                 </span>
@@ -320,7 +359,7 @@ export default function Sayfa() {
         <Bolum baslikId="kim-baslik" ust="Kimin için" baslik="Kimin işini kolaylaştırır?">
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {kimlerIcin.map((k) => (
-              <li key={k.rol} className="flex gap-4">
+              <li key={k.rol} className="flex gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-950">
                   <Ikon ad={k.ikon} />
                 </span>
@@ -337,7 +376,7 @@ export default function Sayfa() {
         <Bolum id="nasil" baslikId="nasil-baslik" ust="Süreç" baslik="Nasıl çalışır?" className="bg-white">
           <ol className="mt-10 grid gap-6 md:grid-cols-3">
             {adimlar.map((a, i) => (
-              <li key={a.baslik} className="relative rounded-xl border border-slate-200 bg-slate-50 p-6">
+              <li key={a.baslik} className="relative rounded-xl border border-slate-200 bg-slate-50 p-6 transition-[transform,box-shadow] duration-150 hover:-translate-y-1 hover:shadow-md">
                 <div className="flex items-center gap-3">
                   <span
                     aria-hidden="true"
@@ -358,7 +397,7 @@ export default function Sayfa() {
         <section aria-labelledby="ilke-baslik" className="bg-slate-900 text-white">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
             <p className="font-semibold uppercase tracking-wide text-amber-300">İlkeler</p>
-            <h2 id="ilke-baslik" className="mt-2 text-3xl font-bold sm:text-4xl">
+            <h2 id="ilke-baslik" className="mt-2 text-3xl font-medium sm:text-4xl">
               Sahada güvenilebilecek bir asistan
             </h2>
             <ul className="mt-10 grid gap-8 md:grid-cols-3">
@@ -398,25 +437,38 @@ export default function Sayfa() {
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-5 md:py-20">
             <div className="md:col-span-2">
               <p className="font-semibold uppercase tracking-wide text-amber-800">Talep</p>
-              <h2 id="talep-baslik" className="mt-2 text-3xl font-bold text-slate-950 sm:text-4xl">
+              <h2 id="talep-baslik" className="mt-2 text-3xl font-medium text-slate-950 sm:text-4xl">
                 Keşif görüşmesi talep edin
               </h2>
               <p className="mt-4 text-slate-700">
                 Tesisinizi ve bugün arızaları nasıl çözdüğünüzü kısaca anlatın. Talebinizi aldıktan sonra, dokümanlarınızın
                 asistana uygun olup olmadığını birlikte değerlendireceğimiz bir görüşme planlarız.
               </p>
-              <ul className="mt-6 space-y-3 text-slate-700">
+              <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-slate-700">Talepten sonra ne olur?</h3>
+              <ol className="mt-4 space-y-0">
                 {[
-                  "Görüşme ücretsizdir, bağlayıcı değildir.",
-                  "Örnek bir kılavuzunuzla kısa bir deneme yapabiliriz.",
-                  "Tüm alanlar zorunludur.",
-                ].map((m) => (
-                  <li key={m} className="flex gap-2">
-                    <Ikon ad="tik" className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
-                    {m}
+                  { baslik: "Talebiniz kaydedilir", metin: "Size bir referans numarası verilir." },
+                  { baslik: "Keşif görüşmesi planlanır", metin: "Tesisinizi ve bugünkü arıza sürecinizi konuşuruz." },
+                  { baslik: "Örnek kılavuzla deneme", metin: "Kendi dokümanınızla asistanı birlikte deneriz." },
+                ].map((a, i, dizi) => (
+                  <li key={a.baslik} className="relative flex gap-4 pb-6 last:pb-0">
+                    {i < dizi.length - 1 && (
+                      <span aria-hidden="true" className="absolute left-4 top-9 h-[calc(100%-2.25rem)] w-px bg-slate-300" />
+                    )}
+                    <span
+                      aria-hidden="true"
+                      className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-900 text-sm font-semibold text-white"
+                    >
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-slate-950">{a.baslik}</p>
+                      <p className="text-sm text-slate-700">{a.metin}</p>
+                    </div>
                   </li>
                 ))}
-              </ul>
+              </ol>
+              <p className="mt-6 text-sm text-slate-700">Görüşme ücretsizdir ve bağlayıcı değildir. Tüm alanlar zorunludur.</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-8 md:col-span-3">
               <TalepFormu />
