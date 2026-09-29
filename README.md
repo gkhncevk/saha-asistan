@@ -87,7 +87,11 @@ npm run dev                     # http://localhost:3000
 npm test                        # 24 birim/API testi (veritabanı gerekmez)
 npm run test:e2e                # 15 senaryo × masaüstü/mobil = 30 test (27 çalışır, 3 cihaza özel atlanır)
 BASE_URL=https://saha-asistani.vercel.app npm run test:e2e   # aynı testler canlıya karşı
+npm run test:api                # Postman koleksiyonu (Newman), varsayılan olarak canlıya karşı
+npm run test:api -- --env-var baseUrl=http://localhost:3000   # yerel sunucuya karşı
 ```
+
+**Postman koleksiyonu:** [`postman/SahaRehber.postman_collection.json`](postman/SahaRehber.postman_collection.json). Postman'de *Import* ile içe aktarıp *Run collection* diyebilirsiniz. 8 istek ve 30 otomatik kontrol içerir: geçerli talep 201, aynı anahtarla tekrar 200 ve aynı referans, 422 alan hataları, honeypot 400, bozuk JSON 400, yanlış içerik türü 415, büyük gövde 413, GET 405, tüm yanıtlarda `no-store` ve 5 sn altı yanıt süresi. Koleksiyonda hız sınırına sayılan 4 istek var; aynı ağdan 10 dakika içinde iki kez çalıştırılırsa 429 alınması beklenir. Newman, eski alt bağımlılıkları `npm audit`'te 19 açık gösterdiği için projeye bağımlılık olarak eklenmedi, `npx` ile anlık çalıştırılıyor.
 
 | Katman | Kapsanan senaryolar |
 |---|---|

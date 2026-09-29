@@ -1,0 +1,243 @@
+{
+  "info": {
+    "name": "SahaRehber Talep API",
+    "description": "POST /api/talepler uç noktasının başarı ve hata senaryoları. Her isteğin 'Tests' sekmesinde otomatik kontroller var.\n\nÇalıştırma: Postman'de koleksiyonu içe aktarıp 'Run collection', ya da komut satırından:\n  npx newman run postman/SahaRehber.postman_collection.json --env-var baseUrl=https://saha-asistani.vercel.app\n\nHız sınırı: IP başına 10 dakikada 5 deneme. Bu koleksiyonda sınıra sayılan 4 istek var (geçerli, tekrar, 422, honeypot); 415/413/400/405 sınır kontrolünden önce reddedildiği için sayılmaz. Koleksiyonu aynı ağdan 10 dakika içinde ikinci kez çalıştırırsanız 429 alırsınız; bu beklenen davranıştır.\n\nYalnızca kurgusal test verisi kullanılır.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://saha-asistani.vercel.app" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Yerelde art arda çalıştırmalar hız sınırına takılmasın diye rastgele bir",
+          "// belgeleme IP'si (TEST-NET-3) gönderilir. Vercel bu başlığı kendisi yazdığı",
+          "// için canlı ortamda etkisi yoktur (bu, canlıda ayrıca doğrulandı).",
+          "if (pm.variables.get('baseUrl').includes('localhost')) {",
+          "  pm.request.headers.upsert({ key: 'x-forwarded-for', value: '203.0.113.' + _.random(1, 254) });",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Tüm yanıtlar için ortak kontroller",
+          "pm.test('Yanıt önbelleğe alınmaz (Cache-Control: no-store)', () => {",
+          "  if (pm.response.code === 405) return; // 405'i Next.js üretir",
+          "  pm.expect(pm.response.headers.get('Cache-Control')).to.include('no-store');",
+          "});",
+          "pm.test('Yanıt süresi 5 sn altında', () => pm.expect(pm.response.responseTime).to.be.below(5000));"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Geçerli talep → 201 ve referans",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Her çalıştırmada yeni bir istek anahtarı; 2. istek aynısını kullanacak.",
+              "pm.collectionVariables.set('istekAnahtari', pm.variables.replaceIn('{{$guid}}'));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const govde = pm.response.json();",
+              "pm.test('Durum 201 Created', () => pm.response.to.have.status(201));",
+              "pm.test('ok:true ve SR-xxxxx biçiminde referans', () => {",
+              "  pm.expect(govde.ok).to.equal(true);",
+              "  pm.expect(govde.referans).to.match(/^SR-\\d{5,}$/);",
+              "});",
+              "pm.collectionVariables.set('referans', govde.referans);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ad\": \"Postman Test Kullanıcı\",\n  \"eposta\": \"  Postman@Ornek-Tesis.TEST \",\n  \"hizmet\": \"ariza-asistani\",\n  \"aciklama\": \"Kurgusal Postman testi: 6 pres, 20 PDF kılavuz, arıza kayıtları Excel'de.\",\n  \"istekAnahtari\": \"{{istekAnahtari}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Aynı istek anahtarıyla tekrar → 200, aynı referans (çift kayıt yok)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const govde = pm.response.json();",
+              "pm.test('Durum 200 (yeni kayıt açılmadı)', () => pm.response.to.have.status(200));",
+              "pm.test('1. istekle aynı referans döndü', () => {",
+              "  pm.expect(govde.referans).to.equal(pm.collectionVariables.get('referans'));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ad\": \"Postman Test Kullanıcı\",\n  \"eposta\": \"postman@ornek-tesis.test\",\n  \"hizmet\": \"ariza-asistani\",\n  \"aciklama\": \"Kurgusal Postman testi: 6 pres, 20 PDF kılavuz, arıza kayıtları Excel'de.\",\n  \"istekAnahtari\": \"{{istekAnahtari}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Geçersiz alanlar → 422 ve alan bazlı hatalar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const govde = pm.response.json();",
+              "pm.test('Durum 422', () => pm.response.to.have.status(422));",
+              "pm.test('ok:false, referans yok', () => {",
+              "  pm.expect(govde.ok).to.equal(false);",
+              "  pm.expect(govde).to.not.have.property('referans');",
+              "});",
+              "pm.test('Dört alanın da hatası var', () => {",
+              "  pm.expect(govde.alanlar).to.have.all.keys('ad', 'eposta', 'hizmet', 'aciklama');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ad\": \"A\",\n  \"eposta\": \"eposta-degil\",\n  \"hizmet\": \"listede-yok\",\n  \"aciklama\": \"kısa\",\n  \"istekAnahtari\": \"{{$guid}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "4. Honeypot dolu (bot) → 400, sahte başarı yok",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Durum 400', () => pm.response.to.have.status(400));",
+              "pm.test('Bota sahte başarı dönülmez', () => pm.expect(pm.response.json().ok).to.equal(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ad\": \"Bot Deneme\",\n  \"eposta\": \"bot@ornek.test\",\n  \"hizmet\": \"ariza-asistani\",\n  \"aciklama\": \"Bu istek honeypot alanını doldurduğu için reddedilmeli.\",\n  \"istekAnahtari\": \"{{$guid}}\",\n  \"website\": \"http://spam.test\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Bozuk JSON → 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Durum 400', () => pm.response.to.have.status(400));",
+              "pm.test('Hata kodu gecersiz_json', () => pm.expect(pm.response.json().kod).to.equal('gecersiz_json'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": { "mode": "raw", "raw": "{\"ad\": \"kapanmayan" }
+      }
+    },
+    {
+      "name": "6. JSON olmayan içerik türü → 415",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('Durum 415', () => pm.response.to.have.status(415));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": { "mode": "raw", "raw": "ad=Deneme&eposta=deneme%40ornek.test" }
+      }
+    },
+    {
+      "name": "7. 10 KB'tan büyük gövde → 413",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.collectionVariables.set('buyukMetin', 'x'.repeat(11000));"]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('Durum 413', () => pm.response.to.have.status(413));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/talepler",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ad\": \"Büyük Gövde\",\n  \"eposta\": \"buyuk@ornek.test\",\n  \"hizmet\": \"ariza-asistani\",\n  \"aciklama\": \"{{buyukMetin}}\",\n  \"istekAnahtari\": \"{{$guid}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "8. GET desteklenmez → 405",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('Durum 405 Method Not Allowed', () => pm.response.to.have.status(405));"]
+          }
+        }
+      ],
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/talepler" }
+    }
+  ]
+}
