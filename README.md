@@ -96,6 +96,8 @@ BASE_URL=https://saha-asistani.vercel.app npm run test:e2e   # aynı testler can
 
 CI (GitHub Actions): lint, tip kontrolü, birim testleri, build ve Playwright (CI'da DB olmadığı için yalnızca "gerçek kayıt" testi atlanır).
 
+**Not:** Next.js 16 aynı klasörde ikinci bir `next dev` sürecine izin vermez. `npm run dev` açıkken `npm run test:e2e` çalıştırırsanız Playwright kendi sunucusunu başlatamaz. Açık sunucuyu kapatın ya da adresini verin: `BASE_URL=http://localhost:3001 npm run test:e2e`. Ayrıca `next dev` açıkken aynı klasörde `next build` çalıştırmayın; ikisi `.next/` klasörünü paylaşır ve dev sunucusu bozulabilir.
+
 Hız sınırı canlıda da geçerli: aynı ağdan 10 dakikada 5'ten fazla gönderim yapılırsa 429 alınır. Canlıya karşı E2E çalıştırırken bu sınıra dikkat edin.
 
 ## Bilinen eksikler ve bilinçli tercihler

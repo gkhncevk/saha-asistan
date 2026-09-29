@@ -82,3 +82,8 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 - Bağımlılık çakışmasında `--force` kolay yol → tip paketini gerçekten uyumlu sürüme yükselttik.
 - Hız sınırını bellekte tutmak en basit yol → sunucusuz ortamda istekler arası kalıcı olmadığı için veritabanında.
 - Klavye testinde ilk iki yaklaşım platforma bağlı çıktı → testin neyi kanıtlaması gerektiği yeniden tanımlandı (Tab sırası + Enter ile gönderim).
+
+## Benim kontrollerim (Gökhan)
+
+- **Testleri kendi terminalimde çalıştırdım (29.09.2026, 16:54–16:58):** `npm test` 24/24; `npm run test:e2e` 27 geçti, 3 bilinçli atlama; `npx playwright test --headed --project=masaustu` ile testlerin tarayıcıda formu doldurup gönderişini izledim, 14 geçti.
+- **Karşılaştığım sorun:** İlk denemede E2E başlamadı: "Another next dev server is already running". Ben ayrı bir terminalde `npm run dev` çalıştırmıştım, arka planda Claude'un sunucusu da açıktı; Next.js 16 aynı klasörde ikinci `next dev`'e izin vermiyor. Claude'un sunucusu ayrıca `.next` klasörü üzerinde `build` çalıştırıldığı için bozulmuş, 404 dönüyordu; kapatıldı. README'ye not eklendi.
