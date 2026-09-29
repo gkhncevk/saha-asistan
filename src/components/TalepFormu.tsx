@@ -45,6 +45,9 @@ export default function TalepFormu() {
   const [hatalar, setHatalar] = useState<AlanHatalari>({});
   const [dokunulan, setDokunulan] = useState<Partial<Record<Alan, boolean>>>({});
   const [durum, setDurum] = useState<Durum>({ tur: "bos" });
+  // Hata özeti yalnızca gönderim denemesinden sonra görünür; alan terk edilince
+  // (blur) yalnızca o alanın altındaki mesaj çıkar.
+  const [ozetAcik, setOzetAcik] = useState(false);
   // Aynı form doldurma için sabit kalır; ağ hatası sonrası tekrar denemede
   // sunucu bunu görüp ikinci kayıt açmaz. Yalnızca başarılı kayıttan sonra yenilenir.
   const istekAnahtari = useRef<string | null>(null);
@@ -76,6 +79,7 @@ export default function TalepFormu() {
   function hatalariGoster(yeniHatalar: AlanHatalari) {
     setHatalar(yeniHatalar);
     setDokunulan({ ad: true, eposta: true, hizmet: true, aciklama: true });
+    setOzetAcik(true);
     // Ekran okuyucu kullanıcısı hataların özetini duysun; özet içindeki
     // bağlantılarla ilgili alana atlayabilir.
     requestAnimationFrame(() => ozetRef.current?.focus());
@@ -92,6 +96,7 @@ export default function TalepFormu() {
       return;
     }
 
+    setOzetAcik(false);
     istekAnahtari.current ??= yeniAnahtar();
     const website = (new FormData(olay.currentTarget).get("website") as string) ?? "";
     setHatalar({});
@@ -167,7 +172,7 @@ export default function TalepFormu() {
     );
   }
 
-  const hataliAlanlar = ALAN_SIRASI.filter((a) => hatalar[a]?.length);
+  const hataliAlanlar = ozetAcik ? ALAN_SIRASI.filter((a) => hatalar[a]?.length) : [];
 
   return (
     <form onSubmit={gonder} noValidate aria-busy={gonderiliyor} className="space-y-6">
