@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
+/* Renkler WCAG AA kontrastına göre seçildi (metin/arka plan en az 4.5:1).
+   Sayfa bilinçli olarak tek (açık) temada: sahada güneş altında okunabilirlik
+   ve kontrastı tek yerden garanti etmek için. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Klavyeyle gezinirken odak her zaman görünür olsun. */
+:focus-visible {
+  outline: 3px solid #b45309; /* amber-700, beyaz üzerinde 5:1 */
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
