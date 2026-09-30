@@ -25,8 +25,8 @@ Commit saatlerine göre (29.09.2026):
 |---|---|
 | Hizmet konusunu seçmek, kapsam ve öncelik kararları | Seçenekleri ve riskleri sunmak |
 | Teknoloji yığınını onaylamak | Kodu ve testleri yazmak |
-| Üretilen kodu okuyup anlamak, sorular sormak | Her adımı gerçek komutla doğrulamak (test, curl, tarayıcı) |
-| Canlı ortamı ve formu kendim denemek | README/AI_LOG taslağı |
+| Testleri kendi makinemde çalıştırmak, API'yi Postman ile kendim test etmek | Her adımı gerçek komutla doğrulamak (test, curl, tarayıcı) |
+| Kodu anlamak: Claude'a hazırlattığım öğrenme rehberiyle sürüyor | README/AI_LOG taslağı |
 
 ## Kararlar
 

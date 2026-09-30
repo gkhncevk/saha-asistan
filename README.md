@@ -62,7 +62,7 @@ Tarayıcı
 - Her alanın görünür `<label>`'ı, ipucu ve hata metni `aria-describedby` ile bağlı; hatalı alan `aria-invalid`.
 - Gönderimde hata varsa üstte **hata özeti** çıkar, odak özete taşınır; özetteki bağlantılar ilgili alana odaklar.
 - Başarıda odak başarı başlığına taşınır; "gönderiliyor" durumu `aria-live` ile duyurulur.
-- Görünür odak halkası (`:focus-visible`, 3 px), metin kontrastı WCAG AA (slate-700+ beyaz üzerinde), `prefers-reduced-motion` desteği.
+- Görünür odak halkası (`:focus-visible`, 3 px), metin kontrastı WCAG AA (açık zeminde slate-700+, koyu zeminde slate-300/400), `prefers-reduced-motion` desteği.
 - Mobil öncelikli: kullanıcı sahada telefonla. 375 px'te yatay taşma yok (E2E testi), dokunma hedefleri ≥ 44 px, e-posta alanında `inputMode="email"`.
 - "Talep formuna geç" atlama bağlantısı, `lang="tr"`.
 - Hero'daki örnek ekran animasyonu `prefers-reduced-motion` tercihinde kapanır (testli). SSS bölümü yerel `<details>` ile: klavye ve ekran okuyucu desteği tarayıcıdan gelir.
@@ -112,8 +112,8 @@ Hız sınırı canlıda da geçerli: aynı ağdan 10 dakikada 5'ten fazla gönde
 - **`istek_denemeleri` tablosu temizlenmiyor.** Üretimde periyodik bir silme işi (ör. 1 günden eski kayıtlar) gerekir.
 - **Zaman aşımından sonra formu düzenleyip tekrar gönderme:** İstek anahtarı yalnızca başarılı kayıttan sonra yenilendiği için, ilk istek sunucuda gerçekte kaydedilmiş ama yanıtı kaybolmuşsa, kullanıcının düzenleyip tekrar gönderdiği içerik yeni kayıt açmaz; eski kaydın referansı döner. Çözüm: alan değiştiğinde anahtarı yenilemek ya da sunucuda aynı anahtar ve farklı içerik için 409 Conflict dönmek.
 - **Referans numaraları ardışık olmayabilir.** Postgres, reddedilen/tekrarlanan INSERT'lerde de sıra numarası tüketir; referans yalnızca benzersizdir.
-- **Tek (açık) tema.** Kontrastı tek yerden garanti etmek için karanlık tema eklenmedi.
-- **Hero'daki telefon ekranı statik bir örnektir**, gerçek yapay zeka çağrısı yapılmaz.
+- **Tek tema, karanlık mod yok.** Kontrastı tek yerden garanti etmek için ayrı bir karanlık mod eklenmedi (hero ve "ilkeler" bölümü bilinçli olarak koyu).
+- **Hero'daki telefon ve bakım paneli ekranları statik örneklerdir**, gerçek yapay zeka çağrısı yapılmaz; altlarında "kurgusal" notu var.
 
 ## Proje yapısı
 
