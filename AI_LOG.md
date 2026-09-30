@@ -4,6 +4,7 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 
 - **Süre başlangıcı:** 29.09.2026 15:52 (İstanbul)
 - **Araç:** Claude Code (Claude Opus 5.5), masaüstü uygulaması. Kod üretimi, terminal komutları ve tarayıcıda test aynı oturumda yapıldı.
+- **Commit geçmişi:** Commit'leri Claude Code benim hesabımla attı. Commit mesajlarındaki `Co-Authored-By: Claude` satırlarını teslimden önce kaldırdım (dosya içerikleri değişmedi); yapay zekanın katkısı bu dosyada ayrıntılı olarak belgelenmiştir.
 - **Ön hazırlık (süre başlamadan):** Neon hesabı ve boş bir Frankfurt projesi oluşturuldu, git e-postası ayarlandı. Ürün kodu süre başladıktan sonra yazıldı.
 
 ## Süre (dürüst döküm)
