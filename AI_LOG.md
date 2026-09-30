@@ -7,6 +7,21 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 - **Commit geçmişi:** Commit'leri Claude Code benim hesabımla attı. Commit mesajlarındaki `Co-Authored-By: Claude` satırlarını teslimden önce kaldırdım (dosya içerikleri değişmedi); yapay zekanın katkısı bu dosyada ayrıntılı olarak belgelenmiştir.
 - **Ön hazırlık (süre başlamadan):** Neon hesabı ve boş bir Frankfurt projesi oluşturuldu, git e-postası ayarlandı. Ürün kodu süre başladıktan sonra yazıldı.
 
+## Benim rolüm (özet)
+
+Bu çalışmada Claude Code'u **yöneten** taraftım: neyin yapılacağına, neyin yeterli olmadığına ve hangi yöne gidileceğine ben karar verdim; kodu ve otomatik testleri Claude yazdı; sonucu ben denetledim ve kendi testlerimle doğruladım.
+
+**Yön verdiğim ve karar verdiğim yerler**
+- Hizmet konusu: Claude'un GTİP önerisini ve görevdeki genel "görev otomasyonu" örneğini reddedip niş bir konu istedim; önerilen bakım asistanı fikrini seçtim.
+- Kapsam: Claude'un "gerçek bir AI sohbet özelliği ekleme, görevin istediği ürüne (sayfa + güvenilir form) odaklan" önerisini kabul ettim.
+- Tasarım: Sayfayı yetersiz bulduğum her seferde bir iyileştirme turu başlattım (toplam üç tur); ikinci turda kendi önceki projemi (ynsocial) tasarım referansı olarak verdim.
+- Kullanılabilirlik: Formun sayfanın en altında kaldığını fark ettim; "Nasıl çalışır?"ın hemen arkasına taşınmasına ve jenerik şablon kalıplarının azaltılmasına karar verdim, formu hero'ya koyma seçeneğini seçmedim.
+- Teslim temizliği: Repoda kalan yerel araç klasörünü (`.claude/`) fark edip kaldırılmasını istedim.
+
+**Kendim yaptığım doğrulamalar**
+- Birim ve E2E testlerini kendi makinemde çalıştırdım, E2E'yi tarayıcıda izleyerek (`--headed`) takip ettim.
+- Postman ile canlı API'ye elle istek atıp dört otomatik test yazdım, negatif kontrolle testlerin gerçekten hata yakaladığını gördüm; Postman'in yapay zekasının "düzelt" önerisini reddettim (ayrıntılar en altta).
+
 ## Süre (dürüst döküm)
 
 Commit saatlerine göre (29–30.09.2026):
@@ -25,10 +40,12 @@ Commit saatlerine göre (29–30.09.2026):
 
 | Ben (Gökhan) | Claude |
 |---|---|
-| Hizmet konusunu seçmek, kapsam ve öncelik kararları | Seçenekleri ve riskleri sunmak |
-| Teknoloji yığınını onaylamak | Kodu ve testleri yazmak |
+| Hizmet konusunu, kapsamı ve öncelikleri belirlemek | Seçenekleri ve riskleri sunmak |
+| Önerilen teknoloji yığınını onaylamak | Kodu, veritabanı şemasını ve otomatik testleri yazmak |
+| Arayüzü değerlendirip iyileştirme turlarını başlatmak, yön vermek (referans proje, form yerleşimi) | İstenen değişiklikleri uygulamak, ekran görüntüsüyle kontrol etmek |
 | Testleri kendi makinemde çalıştırmak, API'yi Postman ile kendim test etmek | Her adımı gerçek komutla doğrulamak (test, curl, tarayıcı) |
-| Kodu anlamak: Claude'a hazırlattığım öğrenme rehberiyle sürüyor | README/AI_LOG taslağı |
+| Belgeleri okuyup düzeltmek, gerçeğe uymayan ifadeleri ayıklatmak | README/AI_LOG taslağı |
+| Kodu anlamak: Claude'a hazırlattığım öğrenme rehberiyle sürüyor | Öğrenme rehberini hazırlamak |
 
 ## Kararlar
 
@@ -38,8 +55,8 @@ Commit saatlerine göre (29–30.09.2026):
 - **Kabul ettiğim:** Niş bir konu isteyince Claude "üretim tesisleri için bakım ve arıza asistanı" fikrini önerdi, ben onayladım. İkna eden gerekçeler: somut bir kullanıcı var (sahadaki teknisyen); kullanıcı telefonla çalıştığı için mobil öncelik bir gereklilik hâline geliyor; "kaynak göster, bilmiyorsa söyle" ilkesi GTİP projemde önem verdiğim açıklanabilirlik yaklaşımının başka bir alana taşınması.
 
 ### 2. Teknoloji: Next.js 16 + Neon Postgres + Vercel (fra1)
-- Tanıdığım araçlar, en az riskli canlıya alma yolu. Vercel'de dosya sistemi kalıcı olmadığı için SQLite/JSON dosyası **bilinçli olarak reddedildi**.
-- Prisma yerine düz SQL (Neon tagged template): her sorguyu görüşmede satır satır açıklayabilmek için. Tagged template değerleri parametre olarak gönderir, SQL metnine eklemez.
+- Claude önerdi, ben onayladım: tanıdığım araçlar ve en az riskli canlıya alma yolu. Vercel'de dosya sistemi kalıcı olmadığı için SQLite/JSON dosyası **bilinçli olarak reddedildi**.
+- Prisma yerine düz SQL (Neon tagged template), Claude'un önerisi: her sorguyu görüşmede satır satır açıklayabilmek için. Tagged template değerleri parametre olarak gönderir, SQL metnine eklemez.
 - Next.js 16 kurulunca şablonla gelen `AGENTS.md` (teslimden önce `.claude/` ayar klasörüyle birlikte repodan kaldırıldı, `next.config.ts` içinde `agentRules: false`) "API'ler eğitim verinizden farklı olabilir" uyarısı verdi; Claude kod yazmadan önce `node_modules/next/dist/docs` altındaki Route Handler dokümanını okudu.
 
 ### 3. Tek doğrulama şeması (Zod) iki tarafta
@@ -50,7 +67,7 @@ Commit saatlerine göre (29–30.09.2026):
 ### 4. Kötüye kullanım önlemleri
 - **Hız sınırı:** aynı IP'den 10 dakikada en fazla 5 deneme. Sunucusuz ortamda bellek istekler arasında kalıcı olmadığı için sayaç **veritabanında** tutuluyor. Geçersiz denemeler de sayılıyor (doğrulamadan önce kaydediliyor).
 - **IP adresi açık saklanmıyor:** gizli tuzla HMAC-SHA256 (`IP_HASH_SALT`).
-- **Honeypot alanı:** Yaygın yaklaşım bota sahte "başarılı" dönmek; **bunu reddettim** çünkü görev "başarı mesajı yalnızca kayıt başarılı olduğunda" diyor. Bot 400 alıyor.
+- **Honeypot alanı:** Yaygın yaklaşım bota sahte "başarılı" dönmek; Claude bunu bilerek seçmedi, çünkü görev "başarı mesajı yalnızca kayıt başarılı olduğunda" diyor. Bot 400 alıyor.
 - **Çift kayıt önleme:** form her doldurma için bir `istekAnahtari` (UUID) üretiyor, DB'de `UNIQUE`. Ağ hatası sonrası tekrar gönderimde ikinci kayıt açılmıyor, aynı referans dönüyor.
 - Gövde boyutu 10 KB ile sınırlı (413), JSON dışı içerik 415.
 
@@ -96,13 +113,21 @@ Commit saatlerine göre (29–30.09.2026):
 | API testleri (Postman/Newman) | `npm run test:api` yerel ve canlı | 8 istek, 30/30 kontrol; canlı ortalama yanıt 266 ms |
 | CI | GitHub Actions: lint, typegen, tsc, birim, build, Playwright | İlk çalıştırma `LayoutProps` nedeniyle başarısız → düzeltildi (yukarıda) |
 
-## AI önerisini kabul etmediğim / değiştirdiğim yerler (özet)
+## Reddedilen öneriler ve bilinçli seçilmeyen kalıplar (özet)
 
-- GTİP konusunu önerdi → reddettim, niş bir bakım asistanı konusu seçtim.
-- Honeypot'ta bota sahte başarı dönmek yaygın bir kalıp → görevin "başarı yalnızca kayıt varsa" kuralıyla çeliştiği için 400 dönülüyor.
-- Bağımlılık çakışmasında `--force` kolay yol → tip paketini gerçekten uyumlu sürüme yükselttik.
-- Hız sınırını bellekte tutmak en basit yol → sunucusuz ortamda istekler arası kalıcı olmadığı için veritabanında.
-- Klavye testinde ilk iki yaklaşım platforma bağlı çıktı → testin neyi kanıtlaması gerektiği yeniden tanımlandı (Tab sırası + Enter ile gönderim).
+**Benim reddettiğim / değiştirdiğim**
+- Claude'un GTİP konusu önerisi → reddettim, niş bir bakım asistanı konusu seçtim.
+- Görevdeki genel "görev otomasyonu" örneği → çok genel buldum, kullanmadım.
+- Formu hero'ya koyma seçeneği → ziyaretçi neyi talep ettiğini bilmeden forma gelmesin diye seçmedim.
+- Postman yapay zekasının 422 için "düzelt" önerisi → 422 bilerek ürettiğim beklenen sonuçtu, reddettim.
+- Kendi fikrim olan "koddaki yorumları silmek" → Claude'un gerekçesini (yorumlar "neden"i anlatıyor) makul bulup vazgeçtim.
+
+**Claude'un yaygın kalıbı bilerek seçmediği yerler**
+- Honeypot'ta bota sahte başarı dönmek → görev kuralıyla çeliştiği için 400.
+- Bağımlılık çakışmasında `--force` → tip paketi uyumlu sürüme yükseltildi.
+- Hız sınırını bellekte tutmak → sunucusuz ortamda kalıcı olmadığı için veritabanında.
+- Newman'ı bağımlılık olarak eklemek → `npm audit` 19 açık gösterdiği için `npx` ile.
+- Karşılaştırma bölümünde uydurma istatistik → kullanılmadı.
 
 ## Benim kontrollerim (Gökhan)
 
