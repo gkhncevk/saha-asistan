@@ -38,7 +38,7 @@ Commit saatlerine göre (29.09.2026):
 ### 2. Teknoloji: Next.js 16 + Neon Postgres + Vercel (fra1)
 - Tanıdığım araçlar, en az riskli canlıya alma yolu. Vercel'de dosya sistemi kalıcı olmadığı için SQLite/JSON dosyası **bilinçli olarak reddedildi**.
 - Prisma yerine düz SQL (Neon tagged template): her sorguyu görüşmede satır satır açıklayabilmek için. Tagged template değerleri parametre olarak gönderir, SQL metnine eklemez.
-- Next.js 16 kurulunca `AGENTS.md` "API'ler eğitim verinizden farklı olabilir" uyarısı verdi; Claude kod yazmadan önce `node_modules/next/dist/docs` altındaki Route Handler dokümanını okudu.
+- Next.js 16 kurulunca şablonla gelen `AGENTS.md` (teslimden önce `.claude/` ayar klasörüyle birlikte repodan kaldırıldı, `next.config.ts` içinde `agentRules: false`) "API'ler eğitim verinizden farklı olabilir" uyarısı verdi; Claude kod yazmadan önce `node_modules/next/dist/docs` altındaki Route Handler dokümanını okudu.
 
 ### 3. Tek doğrulama şeması (Zod) iki tarafta
 - `src/lib/talep-schema.ts` hem formda hem API'de kullanılıyor. Sunucu istemciye güvenmiyor, her isteği yeniden doğruluyor.
