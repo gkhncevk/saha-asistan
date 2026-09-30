@@ -9,7 +9,7 @@ Bu dosya, çalışmada yapay zekayı nasıl kullandığımı, hangi öneriyi kab
 
 ## Süre (dürüst döküm)
 
-Commit saatlerine göre (29.09.2026):
+Commit saatlerine göre (29–30.09.2026):
 
 | Zaman | İş | Yaklaşık süre |
 |---|---|---|
@@ -17,8 +17,9 @@ Commit saatlerine göre (29.09.2026):
 | 17:05–18:02 | Postman koleksiyonu (API testleri) | ~1 sa |
 | 18:00–23:00 arası | Ara verdim; bu sürede ayrıca Postman'i öğrenip kendi testlerimi yazdım (öğrenme amaçlı, ürüne kod eklemedi) | ürün emeğine sayılmadı |
 | 23:00–23:47 | İki tur arayüz iyileştirmesi, formun yukarı taşınması | ~45 dk |
+| 30.09, 12:00–12:45 | Teslim hazırlığı: yerel araç dosyalarının kaldırılması, belgelerin gerçeğe uydurulması, son doğrulamalar | ~45 dk |
 
-**Ürüne harcanan aktif emek: yaklaşık 3 saat.** Görev tanımındaki 3–4 saatlik hedefin içinde. Bunun dışında kodu anlamak için Claude'a repo dışında ayrı bir öğrenme rehberi hazırlattım.
+**Ürüne harcanan aktif emek: yaklaşık 3,5–4 saat.** Görev tanımındaki 3–4 saatlik hedefin içinde. Bunun dışında kodu anlamak için Claude'a repo dışında ayrı bir öğrenme rehberi hazırlattım.
 
 ## Görev dağılımı
 
@@ -63,7 +64,7 @@ Commit saatlerine göre (29.09.2026):
 - **README iddiası testle çürüdü:** README'ye "dokunma hedefleri ≥ 44 px" yazdıktan sonra bunu ölçen bir E2E testi eklendi; başlıktaki logo bağlantısı (32 px) ve gizli "Talep formuna geç" bağlantısı yakalandı. İkincisinde `px-4 py-3` sınıfları `sr-only`'nin `padding:0` kuralını eziyordu, bağlantı gizliyken 24 px yer kaplıyordu. Padding yalnızca odakta uygulanacak şekilde değiştirildi.
 - **`vercel link` `.env.local`'ı güncelledi:** Değerlerin üzerine yazılıp yazılmadığı maskeli çıktıyla kontrol edildi; yalnızca `VERCEL_OIDC_TOKEN` eklenmişti, bizim değerler korunmuştu. Gizli değerler Vercel'e ekrana basılmadan dosyadan aktarıldı.
 - **"Proje çok basit görünüyor" geri bildirimi:** Teslimi tamamlandıktan sonra sayfanın görsel olarak sade kaldığını düşündüm. Claude görselliğin ayrıca puanlanmadığını ama ilk izlenimin önemli olduğunu söyleyip 4 iyileştirme önerdi (ikonlar, animasyonlu örnek ekran, "bugün / SahaRehber ile" karşılaştırması, SSS). Gerçek bir AI sohbet özelliği eklemeyi ise kapsam dışı bıraktık: görev istemiyor, risk getiriyor, görüşmede açıklamam gereken kodu büyütüyor. Karşılaştırma bölümünde uydurma istatistik ("%60 daha hızlı" gibi) **bilinçli olarak kullanılmadı**; yalnızca süreç farkı anlatıldı.
-- **İkinci görsel tur, kendi projemi referans gösterdim:** Sayfayı hâlâ sade bulup Claude'a önceki bir projemi (ynsocial klinik listesi) örnek olarak verdim. Claude kaynak kodunu ve ekran görüntüsünü inceleyip oradaki dili uyarladı: serif başlık (Source Serif 4) + Inter gövde, başlıkta italik vurgu, koyu hero bandı, hero'da yarı saydam kutucuklar, sol kenarı vurgulu kartlar. **Almadığımız:** o projedeki sayısal istatistik kutucukları (ör. "24 doğrulanmış klinik"). Bu hizmet kurgusal olduğu için sayılar uydurma olurdu; kutucuklara sayı yerine özellik yazıldı. Ekran görüntüsünde telefon mockup'ının paneldeki durum etiketlerini kapattığı ve serif başlığın 5 satıra taşdığı görüldü; yerleşim ve boyut düzeltildi. Sonra birim + E2E testleri yeniden çalıştırıldı (24/24, 27/27).
+- **İkinci görsel tur, kendi projemi referans gösterdim:** Sayfayı hâlâ sade bulup Claude'a önceki bir projemi (ynsocial klinik listesi) örnek olarak verdim. Claude kaynak kodunu ve ekran görüntüsünü inceleyip oradaki dili uyarladı: serif başlık (Source Serif 4) + Inter gövde, başlıkta italik vurgu, koyu hero bandı, hero'da yarı saydam kutucuklar, sol kenarı vurgulu kartlar. **Almadığımız:** o projedeki sayısal istatistik kutucukları (ör. "24 doğrulanmış klinik"). Bu hizmet kurgusal olduğu için sayılar uydurma olurdu; kutucuklara sayı yerine özellik yazıldı. Ekran görüntüsünde telefon mockup'ının paneldeki durum etiketlerini kapattığı ve serif başlığın 5 satıra taşdığı görüldü; yerleşim ve boyut düzeltildi. Sonra birim + E2E testleri yeniden çalıştırıldı (birim 24/24; E2E 27 geçti, 3 bilinçli atlama).
 - **Formu yukarı taşıdım, şablon kalıplarını azalttım (benim kararım):** Formun sayfanın en altında kaldığını ve sayfanın "hazır AI şablonu" gibi göründüğünü düşündüm. Claude seçenekleri sundu; ben şunları seçtim: form "Nasıl çalışır?"ın hemen arkasına taşındı (güven ve SSS formun altına), hero'daki ızgara/ışıma efekti, başlık üstündeki hap etiket ve bölümlerin büyük harfli etiketleri kaldırıldı. Yerine alana özgü bir dokunuş olarak hero altına sarı-siyah iş güvenliği şeridi eklendi. Formu hero'ya koyma seçeneğini seçmedim: ziyaretçi neyi talep ettiğini bilmeden forma gelmesin. E2E'deki içerik sırası testi yeni sıraya göre güncellendi (form, "Nasıl çalışır?"ın hemen arkasında olmalı).
 - **Yorumları silme fikrinden vazgeçtim:** Koddaki yorumları silmek istedim; Claude yorumların "ne"yi değil "neden"i anlattığını (ör. hız sınırının doğrulamadan önce sayılması, honeypot'ta sahte başarı dönülmemesi) ve değerlendirmede kararların görünür olmasının önemli olduğunu söyledi. Yorumlar kaldı.
 - **Animasyon kodu hiç eklenmemişti, negatif kontrol yakaladı:** "Hareketi azalt" tercihi için bir test yazıldı ve geçti. Testin anlamlı olup olmadığını görmek için gecikmeyi sıfırlayan CSS kuralını kaldırıp tekrar çalıştırdık; test **yine geçti**. İnceleyince, önceki bir komut zincirinde `grep` 0 döndürdüğü için CSS'i ekleyen adımın hiç çalışmadığı ortaya çıktı. CSS eklendi; artık test kural varken geçiyor, kural kaldırılınca başarısız oluyor. Tarayıcıda da ölçüldü: 300 ms'de cevap opaklığı 0, 2 sn'de 1.
